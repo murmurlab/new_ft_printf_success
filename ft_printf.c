@@ -1,24 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hece <hece@student.42kocaeli.com.tr>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/27 01:29:50 by hece              #+#    #+#             */
+/*   Updated: 2022/12/27 01:43:57 by hece             ###   ########.tr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-int	ft_putchar(int c)
+int	ft_putchar(char c)
 {
 	return (write(1, &c, 1));
 }
 
 int	ft_putstr(char *str)
 {
-	int	index;
 	int	len;
+	int	index;
 
-	len = 0;
 	index = 0;
+	len = 0;
 	if (!str)
 		return (ft_putstr("(null)"));
-	while (str[index])
-	{
-		len += ft_putchar(str[index]);
-		index++;
-	}
+	while (str[index] != '\0')
+		len += ft_putchar(str[index++]);
 	return (len);
 }
 
@@ -78,19 +87,19 @@ int	ft_check_format(va_list args, char format)
 
 int	ft_printf(const char *str, ...)
 {
-	int		len;
 	int		index;
+	int		len;
 	va_list	args;
 
-	len = 0;
 	index = 0;
+	len = 0;
 	va_start(args, str);
 	while (str[index] != '\0')
 	{
 		if (str[index] == '%')
 		{
-			len += ft_check_format(args, str[index]);
 			index++;
+			len += ft_check_format(args, str[index]);
 		}
 		else
 			len += ft_putchar(str[index]);
