@@ -96,8 +96,6 @@ int	ft_printf(const char *str, ...)
 	va_end(args);
 	return (len);
 }
-
-
 /* #include <stdio.h>
 int	main(void)
 {
