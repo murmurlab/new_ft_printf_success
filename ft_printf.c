@@ -63,7 +63,9 @@ int	ft_check_format(va_list args, char format)
 	int	len;
 
 	len = 0;
-	if (format == 'c')
+	if (format != '%')
+		len += ft_putchar(str[index]);
+	else if (format == 'c')
 		len += ft_putchar(va_arg(args, int));
 	else if (format == 's')
 		len += ft_putstr(va_arg(args, char *));
@@ -95,16 +97,7 @@ int	ft_printf(const char *str, ...)
 	len = 0;
 	va_start(args, str);
 	while (str[index] != '\0')
-	{
-		if (str[index] == '%')
-		{
-			index++;
-			len += ft_check_format(args, str[index]);
-		}
-		else
-			len += ft_putchar(str[index]);
-		index++;
-	}
+		len += ft_check_format(args, str[index++]);
 	va_end(args);
 	return (len);
 }
