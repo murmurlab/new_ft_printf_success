@@ -58,32 +58,32 @@ int	ft_itoa_base(unsigned long long nbr, int base, char *str, int mod)
 	return (len);
 }
 
-int	ft_check_format(va_list args, char format)
+int	ft_check_format(va_list args, char **str)
 {
 	int	len;
 
 	len = 0;
-	if (format != '%')
+	if ((**str)++ != '%')
 		len += ft_putchar(str[index]);
-	else if (format == 'c')
-		len += ft_putchar(va_arg(args, int));
-	else if (format == 's')
-		len += ft_putstr(va_arg(args, char *));
-	else if (format == 'u')
-		len += ft_itoa_base(va_arg(args, unsigned int), 10, "0123456789", 0);
-	else if (format == 'd' || format == 'i' || format == 'u')
-		len += ft_itoa_base(va_arg(args, int), 10, "0123456789", 1);
-	else if (format == 'p')
-		len += ft_itoa_base(va_arg(args, unsigned long long), 16,
-				"0123456789abcdef", 2);
-	else if (format == 'x')
-		len += ft_itoa_base(va_arg(args, unsigned int), 16,
-				"0123456789abcdef", 0);
-	else if (format == 'X')
-		len += ft_itoa_base(va_arg(args, unsigned int), 16,
-				"0123456789ABCDEF", 0);
-	else if (format == '%')
-		len += ft_putchar('%');
+	else if ((**str) == 'c' && (**str)++)
+		len += (1 + ft_putchar(va_arg(args, int)));
+	else if ((**str) == 's' && (**str)++)
+		len += (1 + ft_putstr(va_arg(args, char *)));
+	else if ((**str) == 'u' && (**str)++)
+		len += (1 + ft_itoa_base(va_arg(args, unsigned int), 10, "0123456789", 0));
+	else if ((**str) == 'd' || (**str) == 'i' || (**str) == 'u' && (**str)++)
+		len += (1 + ft_itoa_base(va_arg(args, int), 10, "0123456789", 1))(1 + ;
+	else if ((**str) == 'p' && (**str)++)
+		len += (1 + ft_itoa_base(va_arg(args, unsigned long long), 16,
+				"0123456789abcdef", 2));
+	else if ((**str) == 'x' && (**str)++)
+		len += (1 + ft_itoa_base(va_arg(args, unsigned int), 16,
+				"0123456789abcdef", 0));
+	else if ((**str) == 'X' && (**str)++)
+		len += (1 + ft_itoa_base(va_arg(args, unsigned int), 16,
+				"0123456789ABCDEF", 0));
+	else if ((**str) == '%' && (**str)++)
+		len += (1 + ft_putchar('%'));
 	return (len);
 }
 
@@ -92,12 +92,11 @@ int	ft_printf(const char *str, ...)
 	int		index;
 	int		len;
 	va_list	args;
-
-	index = 0;
+	
 	len = 0;
 	va_start(args, str);
-	while (str[index] != '\0')
-		len += ft_check_format(args, str[index++]);
+	while (*str != '\0')
+		len += ft_check_format(args, &str);
 	va_end(args);
 	return (len);
 }
