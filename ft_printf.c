@@ -3,84 +3,72 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hece <hece@student.42kocaeli.com.tr>       +#+  +:+       +#+        */
+/*   By: ahbasara <ahbasara@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/27 01:29:50 by hece              #+#    #+#             */
-/*   Updated: 2022/12/27 01:43:57 by hece             ###   ########.tr       */
+/*   Updated: 2023/01/09 13:47:12 by ahbasara         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_putchar(char c)
+unsigned long long int	_(char *s, char p, char kar)
 {
-	return (write(1, &c, 1));
+	unsigned long long int	i;
+
+	i = 0;
+	if (p && !s)
+		return (write(1, "(null)", 6));
+	while (s && s[i])
+		write(1, &s[i++], p);
+	return ((!s && write(1, &kar, (!s || 0))) + i);
 }
 
-int	ft_putstr(char *str)
+unsigned long long int	x(unsigned long long int i, char *s, char m)
 {
-	int	len;
-	int	index;
+	unsigned long long int	digit;
+	unsigned long long int	lne;
+	char					base;
 
-	index = 0;
-	len = 0;
-	if (!str)
-		return (ft_putstr("(null)"));
-	while (str[index] != '\0')
-		len += ft_putchar(str[index++]);
-	return (len);
-}
-
-int	ft_itoa_base(unsigned long long nbr, int base, char *str, int mod)
-{
-	int	nbr_list[100];
-	int	index;
-	int	len;
-
-	index = 0;
-	len = 0;
-	if (mod == 1 && (int)nbr < 0)
+	base = _(s, 0, 0);
+	lne = 1;
+	digit = 1;
+	if (m && (long long int)i < 0)
 	{
-		nbr *= -1;
-		len += ft_putchar('-');
+		write(1, "-", (lne++ || 1));
+		i *= -1;
 	}
-	if (mod == 2)
-		len += ft_putstr("0x");
-	if (nbr == 0)
-		len += ft_putchar('0');
-	while (nbr)
+	while ((digit * base) && i / (digit * base))
+		digit *= (base * (lne++ || 1));
+	while (digit && (i / digit || !i))
 	{
-		nbr_list[index++] = nbr % base;
-		nbr = nbr / base;
+		_(NULL, 0, s[(i / digit) % base]);
+		digit /= base;
 	}
-	while (index--)
-		len += ft_putchar(str[nbr_list[index]]);
-	return (len);
+	return (lne);
 }
 
-int	ft_check_format(va_list args, const char **str, int len)
+int	ft_check_format(va_list argl, const char **str, int len)
 {
 	if (**str != '%')
 		len += ft_putchar(*(*str)++);
 	else if ((*++(*str)) == 'c' && (*str)++)
-		len += ft_putchar(va_arg(args, int));
+		len += _(NULL, 0, va_arg(argl, int));
 	else if ((**str) == 's' && (*str)++)
-		len += ft_putstr(va_arg(args, char *));
+		len += _(va_arg(argl, char*), 1, 0);
 	else if ((**str) == 'u' && (*str)++)
-		len += ft_itoa_base(va_arg(args, unsigned int), 10, "0123456789", 0);
+		len += x(va_arg(argl, unsigned int), "0123456789", 0);
 	else if (((**str) == 'd' || (**str) == 'i' || (**str) == 'u') && (*str)++)
-		len += ft_itoa_base(va_arg(args, int), 10, "0123456789", 1);
+		len += x(va_arg(argl, int), "0123456789", 1);
 	else if ((**str) == 'p' && (*str)++)
-		len += ft_itoa_base(va_arg(args, unsigned long long), 16,
-				"0123456789abcdef", 2);
+		len += (_("0x", 1, 0) + x(va_arg(argl, unsigned long), \
+		"0123456789abcdef", 0));
 	else if ((**str) == 'x' && (*str)++)
-		len += ft_itoa_base(va_arg(args, unsigned int), 16,
-				"0123456789abcdef", 0);
+		len += x(va_arg(argl, unsigned int), "0123456789abcdef", 0);
 	else if ((**str) == 'X' && (*str)++)
-		len += ft_itoa_base(va_arg(args, unsigned int), 16,
-				"0123456789ABCDEF", 0);
+		len += x(va_arg(argl, unsigned int), "0123456789ABCDEF", 0);
 	else if ((**str) == '%' && (*str)++)
-		len += ft_putchar('%');
+		len += _(NULL, 0, '%');
 	return (len);
 }
 
@@ -96,14 +84,34 @@ int	ft_printf(const char *str, ...)
 	va_end(args);
 	return (len);
 }
-/* #include <stdio.h>
-int	main(void)
-{
-	//int a;
-	//void	*p = &a;
-	char b;
 
-	b = 'w';
-	printf("%d\n", ft_printf("|my,   |%d| asdds|", 12333));
-	printf("%d", printf("|or,   |%d| asdds|", 12333));
-} */
+/* (
+	((*s != '%') && ((lne += mr_putstr(NULL, 0, *s++)) || 1))
+	|| (((*(++s)) == 'c' && s++) && ((lne += mr_putstr(NULL, 0, va_arg(argl, int))) || 1))
+	|| ((*s == 's' && s++) && ((lne += mr_putstr(va_arg(argl, char*), 1, 0)) || 1))
+	|| ((*s == 'u' && s++) && ((lne += itoa_base_v2(va_arg(argl, unsigned int), "0123456789", 0)) || 1))
+	|| (((*s == 'd' || *s == 'i' || *s == 'u') && s++) && ((lne += itoa_base_v2(va_arg(argl, int), "0123456789", 1)) || 1))
+	|| ((*s == 'p' && s++) && ((lne += (mr_putstr("0x", 1, 0) + itoa_base_v2(va_arg(argl, unsigned long), "0123456789abcdef", 0))) || 1))
+	|| ((*s == 'x' && s++) && ((lne += itoa_base_v2(va_arg(argl, unsigned int), "0123456789abcdef", 0)) || 1))
+	|| ((*s == 'X' && s++) && ((lne += itoa_base_v2(va_arg(argl, unsigned int), "0123456789ABCDEF", 0)) || 1))
+	|| ((*s == '%' && s++) && ((lne += mr_putstr(NULL, 0, '%')) || 1))
+); */
+
+/* 
+	while (*s)
+	{
+		tmp = (-1 *~(0 + !(((*s != '%') && (write(1, s, 1) || 1)) || !(((* (s + 1\
+		) == 'c') && (lne += mr_putstr(NULL, 1, va_arg(argl, int)) || 1)) || ((*(s + 1 \
+		) == 's') && (lne += mr_putstr(va_arg(argl, char*), 1, 0) || 1)) || ((*(s + 1) \
+		== 'p') && (lne += 2 + itoa_base_v2(va_arg(argl, unsigned long), "0123456789abcdef"\
+		, (mr_putstr("0x", 2, 0) && 0)) || 1)) || ((*(s + 1) == 'd') && (\
+		(lne += itoa_base_v2(va_arg(argl, int), "0123456789", 1)) || 1)) || ((*(s + 1) ==\
+		'x') && (lne += itoa_base_v2(va_arg(argl, unsigned int), "0123456789abcdef", 0 \
+		) || 1)) || ((*(s + 1) == 'X') && (lne += itoa_base_v2(va_arg(argl, unsigned \
+		int), "0123456789ABCDEF", 0) || 1)) || ((*(s + 1) == 'u') && (\
+		lne += itoa_base_v2(va_arg(argl, unsigned int), "0123456789", 1) || 1)) || 1)))\
+		);
+		s += tmp;
+		lne += tmp;
+	}
+	return ((int)lne); */

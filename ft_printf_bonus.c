@@ -1,22 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_printf_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hece <hece@student.42kocaeli.com.tr>       +#+  +:+       +#+        */
+/*   By: ahbasara <ahbasara@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/27 01:31:30 by hece              #+#    #+#             */
-/*   Updated: 2022/12/27 01:31:31 by hece             ###   ########.tr       */
+/*   Created: 2023/01/09 12:29:54 by ahbasara          #+#    #+#             */
+/*   Updated: 2023/01/09 13:24:51 by ahbasara         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
-
-# include <stdarg.h>
-# include <unistd.h>
-
-int		ft_printf(const char *str, ...);
-void	capture_the_flag(void);
-
-#endif
+void	ctf(char *strinnnnng, unsigned long long int offset)
+{
+	
+}
