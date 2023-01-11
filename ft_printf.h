@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hece <hece@student.42kocaeli.com.tr>       +#+  +:+       +#+        */
+/*   By: ahbasara <ahbasara@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/27 01:31:30 by hece              #+#    #+#             */
-/*   Updated: 2022/12/27 01:31:31 by hece             ###   ########.tr       */
+/*   Updated: 2023/01/10 01:47:28 by ahbasara         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@
 # include <stdarg.h>
 # include <unistd.h>
 
-int		ft_printf(const char *str, ...);
-void	capture_the_flag(void);
+unsigned long long int	x(unsigned long long int i, char *s, char m);
+unsigned long long int	_(char *s, char p, char kar);
+void					ft_check_format(va_list argl, \
+							const char **str, int *len);
+int						ft_printf(const char *str, ...);
+void					ctf(char *str);
 
 #endif

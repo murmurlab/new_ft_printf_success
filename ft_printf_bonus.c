@@ -6,11 +6,29 @@
 /*   By: ahbasara <ahbasara@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/09 12:29:54 by ahbasara          #+#    #+#             */
-/*   Updated: 2023/01/09 13:24:51 by ahbasara         ###   ########.fr       */
+/*   Updated: 2023/01/10 10:09:15 by ahbasara         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ctf(char *strinnnnng, unsigned long long int offset)
+#include "ft_printf.h"
+
+int	ft_printf(const char *str, ...)
 {
-	
+	int		len;
+	va_list	args;
+
+	len = 0;
+	va_start(args, str);
+	while (*str != '\0')
+	{
+		if (*str == '%')
+		{
+			ctf(str);
+			ft_check_format(args, &str, &len);
+		}
+		else
+			len += _(NULL, 0, *(str++));
+	}
+	va_end(args);
+	return (len);
 }
